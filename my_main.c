@@ -61,8 +61,35 @@ void my_main() {
   tmp = new_matrix(4, 1000);
   clear_screen( t );
 
-  for (i=0;i<lastop;i++) {  
-    switch (op[i].opcode) {
+  for (i=0;i<lastop;i++){  
+    switch (op[i].opcode)
+      {
+      case PUSH :
+	push(s);
+	break;
+	
+      case POP :
+	pop(s);
+	break;
+	
+      case MOVE :
+	tmp = make_translate(op[i].op.move.d[0],
+			     op[i].op.move.d[1],
+			     op[i].op.move.d[2]);
+	matrix_mult(peek(s),tmp);
+	copy_matrix(tmp, peek(s));
+	break;
+      case ROTATE :
+	break;
+      case SCALE :
+	tmp = make_scale(op[i].op.scale.d[0],
+			 op[i].op.scale.d[1],
+			 op[i].op.scale.d[2]);
+	matrix_mult(peek(s),tmp);
+	copy_matrix(tmp,peek(s));
+	break;
+      case BOX :
+	
     }
   }
 }
