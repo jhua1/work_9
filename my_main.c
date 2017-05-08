@@ -78,6 +78,7 @@ void my_main() {
 			     op[i].op.move.d[2]);
 	matrix_mult(peek(s),tmp);
 	copy_matrix(tmp, peek(s));
+	tmp->lastcol = 0;
 	break;
       case ROTATE :
 	break;
@@ -87,9 +88,61 @@ void my_main() {
 			 op[i].op.scale.d[2]);
 	matrix_mult(peek(s),tmp);
 	copy_matrix(tmp,peek(s));
+	tmp->lastcol = 0;
 	break;
       case BOX :
-	
-    }
+	add_box(tmp,
+		op[i].op.box.d0[0],
+		op[i].op.box.d0[1],
+		op[i].op.box.d0[2],
+		op[i].op.box.d1[0],
+		op[i].op.box.d1[1],
+		op[i].op.box.d1[2]);
+	matrix_mult(peek(s),tmp);
+	draw_polygons(tmp,s,c);
+	tmp->lastcol = 0;
+	break;
+      case SPHERE :
+	add_sphere(tmp,
+		   op[i].op.sphere.d[0],
+		   op[i].op.sphere.d[1],
+		   op[i].op.sphere.d[2],
+		   op[i].op.box.r,
+		   0.1);
+	matrix_mult(peek(s),tmp);
+	draw_polygons(tmp,s,c);
+	tmp->lastcol = 0;
+	break;
+      case TORUS : 
+	add_torus(tmp,		  
+		  op[i].op.torus.d[0],
+		  op[i].op.torus.d[1],
+		  op[i].op.torus.d[2],
+		  op[i].op.torus.r0,
+		  op[i].op.torus.r1,
+		  0.1);
+	matrix_mult(peek(s),tmp);	
+	draw_polygons(tmp,s,c);
+	tmp->lastcol = 0;
+	break;
+      case LINE :
+	add_line(tmp,
+		 op[i].op.line.p0[0],
+		 op[i].op.line.p0[1],
+		 op[i].op.line.p0[2],		 
+		 op[i].op.line.p1[0],
+		 op[i].op.line.p1[1],
+		 op[i].op.line.p1[2]);
+	matrix_mult(peek(s),tmp);
+	draw_lines(tmp,s,c);
+	tmp->lastcol = 0;
+	break;
+      case SAVE : 
+	save_extension(s, op[i].op.save.p->name);
+	break;
+      case DISPLAY : 
+	display(s);
+	break;	
+      }
   }
 }
