@@ -80,7 +80,16 @@ void my_main() {
 	copy_matrix(tmp, peek(s));
 	tmp->lastcol = 0;
 	break;
-      case ROTATE :
+      case ROTATE :	
+	if ( op[i].op.rotate.axis == 0)
+	  tmp = make_rotX( op[i].op.rotate.degrees * M_PI / 180 );
+	else if ( op[i].op.rotate.axis == 1)
+	  tmp = make_rotY( op[i].op.rotate.degrees * M_PI / 180 );
+	else if ( op[i].op.rotate.axis == 2)
+	  tmp = make_rotX( op[i].op.rotate.degrees * M_PI / 180 );
+	matrix_mult(peek(s),tmp);
+	copy_matrix(tmp,peek(s));
+	tmp->lastcol = 0;      
 	break;
       case SCALE :
 	tmp = make_scale(op[i].op.scale.d[0],
@@ -99,7 +108,7 @@ void my_main() {
 		op[i].op.box.d1[1],
 		op[i].op.box.d1[2]);
 	matrix_mult(peek(s),tmp);
-	draw_polygons(tmp,s,c);
+	draw_polygons(tmp,t,g);
 	tmp->lastcol = 0;
 	break;
       case SPHERE :
@@ -107,10 +116,10 @@ void my_main() {
 		   op[i].op.sphere.d[0],
 		   op[i].op.sphere.d[1],
 		   op[i].op.sphere.d[2],
-		   op[i].op.box.r,
+		   op[i].op.sphere.r,
 		   0.1);
 	matrix_mult(peek(s),tmp);
-	draw_polygons(tmp,s,c);
+	draw_polygons(tmp,t,g);
 	tmp->lastcol = 0;
 	break;
       case TORUS : 
@@ -122,11 +131,11 @@ void my_main() {
 		  op[i].op.torus.r1,
 		  0.1);
 	matrix_mult(peek(s),tmp);	
-	draw_polygons(tmp,s,c);
+	draw_polygons(tmp,t,g);
 	tmp->lastcol = 0;
 	break;
       case LINE :
-	add_line(tmp,
+	add_edge(tmp,
 		 op[i].op.line.p0[0],
 		 op[i].op.line.p0[1],
 		 op[i].op.line.p0[2],		 
@@ -134,14 +143,14 @@ void my_main() {
 		 op[i].op.line.p1[1],
 		 op[i].op.line.p1[2]);
 	matrix_mult(peek(s),tmp);
-	draw_lines(tmp,s,c);
+	draw_lines(tmp,t,g);
 	tmp->lastcol = 0;
 	break;
       case SAVE : 
-	save_extension(s, op[i].op.save.p->name);
+	save_extension(t, op[i].op.save.p->name);
 	break;
       case DISPLAY : 
-	display(s);
+	display(t);
 	break;	
       }
   }
